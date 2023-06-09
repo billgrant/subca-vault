@@ -15,14 +15,14 @@ Why do we need this? Because the API call `/pki/intermediate/set-signed` does no
     https://<vault_address>/v1/<path>/keys/import
 ```
 
-*Path is the mount path of your PKI Secrets Engine the default is PKI*
+*Path is the mount path of your PKI Secrets Engine the default is `pki`*
 
 `payload.json`
 
 ```json
 {
    "key_name":"subca-key",
-   "pem_bundle":"-----BEGIN PRIVATE KEY-----\n
+   "pem_bundle": "-----BEGIN PRIVATE KEY-----\n
 MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQClwKWypRyUNhJJ
 ...................snip.........................................
 sdNC8yQOXhSCTmRYD3otIxj2Vg==\n
@@ -47,7 +47,7 @@ curl \
 
 ```json
 {
-   "certificate":"-----BEGIN CERTIFICATE-----\n
+   "certificate": "-----BEGIN CERTIFICATE-----\n
 MIIFETCCA/mgAwIBAgITHAAAADgV4gn6az5lHgABAAAAODANBgkqhkiG9w0BAQsF
 ...................snip.........................................
 yiqsz/6FZPLTqg31PVa2s1UuD53c26SbVlyTtEDq4QGiZCfNXvhh9T3MJaeZW6gb
