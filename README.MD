@@ -56,3 +56,23 @@ uorf2Pc=\n
 }
 ```
 *`\n` is required as shown above*
+
+### The test this create a role using the CLI.
+
+
+```shell
+vault write <path>/roles/example-dot-com \
+    allowed_domains=example.com \
+    allow_subdomains=true max_ttl=72h
+```
+
+*Path is the mount path of your PKI Secrets Engine the default is `pki`*
+
+### Now we can issue certficates
+
+```
+vault write <path>/issue/example-dot-com \
+    common_name=test.example.com
+```
+
+*Path is the mount path of your PKI Secrets Engine the default is `pki`*
