@@ -57,7 +57,9 @@ uorf2Pc=\n
 ```
 *`\n` is required as shown above*
 
-### The test this create a role using the CLI.
+## Confirming it works
+
+### Create a role using the CLI.
 
 
 ```shell
