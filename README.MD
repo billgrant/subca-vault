@@ -1,18 +1,21 @@
 # Subca-Vault
 
-
 ## This repo shows an example of how to upload a Signed Intermediate cert and private key into the Hashicorp Vault PKI Secrets Engine when Vault did not create the CSR.
 
 Why do we need this? Because the API call `/pki/intermediate/set-signed` does not support uploading a pem bundle.
 
-### Upload the private key
+ **Update** Turns out there is an easier way. The above statement below is true, however, the following call `pki/issuers/import/bundle` will allow this type of upload. 
+ 
+See below for the simplified instructions
+
+### Upload the Pem Bundle
 
 ```curl
   curl \
     --header "X-Vault-Token: <token>" \
     --request POST \
     --data @payload.json \
-    https://<vault_address>/v1/<path>/keys/import
+    https://<vault_address>/v1/<path>/issuers/import/bundle
 ```
 
 *Path is the mount path of your PKI Secrets Engine the default is `pki`*
@@ -21,41 +24,40 @@ Why do we need this? Because the API call `/pki/intermediate/set-signed` does no
 
 ```json
 {
-   "key_name":"subca-key",
-   "pem_bundle": "-----BEGIN PRIVATE KEY-----\n
-MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQClwKWypRyUNhJJ
-...................snip.........................................
-sdNC8yQOXhSCTmRYD3otIxj2Vg==\n
------END PRIVATE KEY-----"
+  "pem_bundle": "-----BEGIN PRIVATE KEY-----\n
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7OvA5O2dM4FMu
+...............snip.............................................
+nTHYV2fMT7ZjHvmBC4d5IGA=\n
+-----END PRIVATE KEY-----\n
+-----BEGIN CERTIFICATE-----\n
+MIIFlzCCBH+gAwIBAgITHAAAADyn2QnrRes6WAACAAAAPDANBgkqhkiG9w0BAQsF
+...............sip..............................................
+mR4h8BKavfU6L/ksonmEty1Sg7z486X+zCKu93EmgFEuwuK+139Ly/P2gQ==\n
+-----END CERTIFICATE-----\n"
 }
 ```
 *`\n` is required as shown above*
 
 
 
-### Set the signed Intermediate cert
+### Set the default issuer
 
 ```curl
-curl \
+  curl \
     --header "X-Vault-Token: <token>" \
     --request POST \
-    --data "@int_payload.json" \
-    https://https://<vault_address>/v1/<path>/intermediate/set-signed 
+    --data @replace_payload.json \
+    https://<vault_address>/v1/<path>/config/issuers
 ```
 
-`int_payload.json`
+`replace_payload.json`
 
 ```json
 {
-   "certificate": "-----BEGIN CERTIFICATE-----\n
-MIIFETCCA/mgAwIBAgITHAAAADgV4gn6az5lHgABAAAAODANBgkqhkiG9w0BAQsF
-...................snip.........................................
-yiqsz/6FZPLTqg31PVa2s1UuD53c26SbVlyTtEDq4QGiZCfNXvhh9T3MJaeZW6gb
-uorf2Pc=\n
------END CERTIFICATE-----"
+  "default": "issuer-id"
 }
 ```
-*`\n` is required as shown above*
+
 
 ## Confirming it works
 
